@@ -2,8 +2,12 @@
 
 import time
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
-driver = webdriver.Chrome('./chromedriver')
+chrome_options = Options()
+chrome_options.add_argument("--start-maximized")
+
+driver = webdriver.Chrome(executable_path='./chromedriver', chrome_options=chrome_options)
 
 driver.get('http://www.google.com/');
 time.sleep(2) # Let the user actually see something!
