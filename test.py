@@ -21,7 +21,9 @@ time.sleep(1) # Let the user actually see something!
 
 driver.save_screenshot('shot.png')
 
-html = driver.page_source
+# html = driver.page_source
+html = driver.execute_script("return document.body.innerHTML")
+
 print(html)
 
 driver.quit()
