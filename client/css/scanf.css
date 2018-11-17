@@ -1,0 +1,41 @@
+body, html {
+    margin: 0;
+    overflow: hidden;
+    height:100%;
+}
+
+ul {
+    list-style-type: none;
+}
+
+#sitePanel{
+    /* padding-left: 0;
+    padding-right: 0; */
+}
+
+#site {
+    padding-left: 0;
+    padding-right: 0;
+
+    position: fixed;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+
+    /* max-height: calc(100vh - 50px); */
+}
+
+#pages {
+    position: fixed;
+    width: 100%;
+    overflow-y: auto;
+}
+
+
+
+#site {
+    height:100%;
+}
+
+#pages {
+    height:100%;
+}

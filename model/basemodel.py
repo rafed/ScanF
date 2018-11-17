@@ -11,3 +11,6 @@ class BaseModel():
 	def delete(self):
 		db.session.delete(self)
 		db.session.commit()
+
+	def as_dict(self):
+		return {c.name: getattr(self, c.name) for c in self.__table__.columns}
