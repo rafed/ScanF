@@ -20,7 +20,7 @@ class WebsiteController(Resource):
 
         args = parser.parse_args()
         url = args['url']
-        stop = args['true']
+        stop = args['stop']
 
         if stop is not None and stop is True:
             crawler.running = False
@@ -33,10 +33,15 @@ class WebsiteController(Resource):
             return {
                 "status":"ok",
                 "msg":"busy"
-            }
+            }, 403
         
-        crawler.setup(url)
-        crawler.crawl()
+        try:
+            crawler.crawl(url)
+        except:
+            return {
+                "status":"error",
+                "msg":"bad url"
+            }, 403
         
         return {"status":"ok"}
 

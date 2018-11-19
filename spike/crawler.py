@@ -20,11 +20,11 @@ scanned_urls = []
 not_scanned_urls = [website]
 
 def eligible(url):
-    url = urlparse(url)
-    if url.netloc != home_url.netloc:
+    parsed_url = urlparse(url)
+    if parsed_url.netloc != home_url.netloc:
         return False
 
-    if r in scanned_urls or r in not_scanned_urls:
+    if url in scanned_urls or url in not_scanned_urls:
         return False
 
     return True

@@ -13,25 +13,34 @@ class Crawler:
         self.pool = ThreadPool(10) 
         self.running = False
         
-    def setup(self, url):
+    def _setup(self, url):
         if not url.startswith("http"):
             url = "http://"+url
         # if not url.endswith("/"):
         #     url = url + "/"
+
         self.url = url
         self.home_url = urlparse(self.url)
         self.scanned_urls = []
         self.not_scanned_urls = [self.url]
-
-
-    def crawl(self):
         self.running = True
-        
+
+        website = Website.query.filter(Website.baseurl == self.home_url.netloc).first()
+
+        if not website:
+            website = Website(self.home_url.netloc, None)
+            website.save_to_db()
+
+        self.website_id = website.id
+
+    def crawl(self, url):
+        self._setup(url)
+
         while len(self.not_scanned_urls) > 0 and self.running is True:
 
             length = 10 if len(self.not_scanned_urls)>10 else len(self.not_scanned_urls)
 
-            results = self.pool.map(self._get_parse, self.not_scanned_urls[0:length])
+            results = self.pool.map(self._get_links_and_forms_and_store, self.not_scanned_urls[0:length])
             results = [item for sublist in results for item in sublist]
 
             self.scanned_urls.extend(self.not_scanned_urls[0:length])
@@ -41,18 +50,27 @@ class Crawler:
                 if self._eligible(r):
                     self.not_scanned_urls.append(r)
 
-            print(self.not_scanned_urls)
-            for s in self.scanned_urls:
-                print(s)
-            print(len(self.scanned_urls))
-
         self.running = False
 
 
-    def _get_parse(self, url):
+    def _get_links_and_forms_and_store(self, url):
+        if Page.query.filter(Page.url == url).first():
+            return []
+
+        page = Page(self.website_id, url)
+        page.save_to_db()
+
         r = requests.get(url)
         soup = BeautifulSoup(r.text, "html.parser")
 
+        print(self._get_forms(soup))
+        return self._get_links(url, soup)
+
+    def _get_forms(self, soup):
+        forms = soup.findAll('form')
+        return forms
+
+    def _get_links(self, baseurl, soup):
         new_links = []
 
         for link in [h.get('href') for h in soup.find_all('a')]:
@@ -63,12 +81,11 @@ class Crawler:
                     if urlparse(link).hostname != self.home_url.hostname:
                         continue
                     
-                next_link = urljoin(url, link)
+                next_link = urljoin(baseurl, link)
                 new_links.append(next_link)
 
         return new_links
 
-   
     def _eligible(self, url):
         parsed_url = urlparse(url)
         if parsed_url.hostname != self.home_url.hostname:

@@ -21,6 +21,6 @@ def serve_files(path):
 
 api.add_resource(WebsiteController, '/website')
 
-api.add_resource(TestController, '/test', '/test/<string:form_id>')
-
 api.add_resource(PageController, '/page/<string:website_id>')
+
+api.add_resource(TestController, '/test', '/test/<string:form_id>')
