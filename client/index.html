@@ -5,6 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <title>ScanF - Vulnerability Scanner</title>
+
   <!-- Bootstrap -->
   <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
   <script src="js/jquery-3.3.1.min.js"></script>
@@ -12,6 +14,7 @@
 
   <!-- Vue.js -->
   <script src="js/vue-dev.js"></script>
+  <script src="js/axios.min.js"></script>
 
   <link rel="stylesheet" href="css/hacker.css" type="text/css">
   <link rel="stylesheet" href="css/scanf.css" type="text/css">
@@ -26,48 +29,48 @@
     </div>
 
     <div class="row">
-      <!-- <div id="app">
-        {{ message }}
-      </div> -->
-      <div class="col-md-4" id="sitePanel">
-        <h3>Sites</h3>
-        <ul id="site">
-          <li v-for="n in 30">
-            <p>{{message}}</p>
+      <div class="col-md-2" id="sitePanel">
+
+        <h3>Websites</h3>
+        <input v-model="inputUrl" type="text" placeholder="Enter URL" width="10px">
+        <button v-on:click="goCrawl" type="submit">Go!</button>
+        <div id='sites'>
+          <li v-for="site in websites">
+            <a v-on:click="eventWebsiteClick(site.id)">{{site.baseurl}}</a>
           </li>
-        </ul>
-      </div>
+        </div>
 
-      <div class="col-md-4" id="pagesPanel">
-          <!-- <ul id="site2">
-            <li v-for="n in 30">
-              <p>{{message}}</p>
-            </li>
-          </ul> -->
-      </div>
-
-      <div class="col-md-4" id="testPanel">
+        <h3>Cookies</h3>
+        <div id="cookies">
+          <li v-for="site in websites">
+            <a>{{site.baseurl}}</a>
+          </li>
+        </div>
 
       </div>
 
+      <div class="col-md-2">
+        <h3>Pages</h3>
+        <div id="pages">
+          <li v-for="page in pages">
+            <a>{{page.url}}</a>
+          </li>
+        </div>
+      </div>
     </div>
+    <!-- End of row -->
+
+
   </div>
 </body>
 
-<script>
-  var app = new Vue({
-    el: '#site',
-    data: {
-      message: 'www.facebook.comaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-    }
-  })
 
-  var app = new Vue({
-    el: '#site2',
-    data: {
-      message: 'Hello yo'
-    }
-  })
+<script src="js/website.js"></script>
+<script src="js/page.js"></script>
+
+<script>
+  scanfUrl = 'http://localhost:5000/api'
+  websiteVue.getWebsites()
 </script>
 
 </html>
