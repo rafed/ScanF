@@ -9,12 +9,7 @@ class Cookie(db.Model, BaseModel):
     key = db.Column(db.String(1000))
     value = db.Column(db.String(1000))
 
-    children = db.relationship('Website', backref='Cookie', passive_deletes=True)
-    
     def __init__(self, website_id, key, value):
         self.website_id = website_id
         self.key = key
         self.value = value
-
-
-       

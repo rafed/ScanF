@@ -13,8 +13,6 @@ class Test(db.Model, BaseModel):
     duration = db.Column(db.Float)
     result = db.Column(db.String(100))
 
-    children = db.relationship('Form', backref='Test', passive_deletes=True)
-    
     def __init__(self, form_id, input_json, html_output_path, screenshot_path, time, duration, result):
         self.form_id = form_id
         self.input_json = input_json

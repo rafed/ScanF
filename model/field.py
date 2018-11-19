@@ -10,7 +10,7 @@ class Field(db.Model, BaseModel):
     name = db.Column(db.String(100))
     default_value = db.Column(db.String(100))
 
-    children = db.relationship('Form', backref='Field', passive_deletes=True)
+    # children = db.relationship('Constraint', backref='Field', passive_deletes=True)
     
     def __init__(self, form_id, type, name, default_value):
         self.form_id = form_id

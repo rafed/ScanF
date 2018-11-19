@@ -9,7 +9,8 @@ class Form(db.Model, BaseModel):
     method = db.Column(db.String(10))
     form_action = db.Column(db.String(1000))
 
-    children = db.relationship('Page', backref='Form', passive_deletes=True)
+    # children = db.relationship('Field', backref='Form', passive_deletes=True)
+    # children2 = db.relationship('Test', backref='Form', passive_deletes=True)
     
     def __init__(self, page_id, method, form_action):
         self.page_id = page_id
