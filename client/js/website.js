@@ -29,6 +29,20 @@ var websiteVue = new Vue({
                     this.getWebsites()
                 }, (error) => {
                     this.loading = false;
+                    alert(error.response.data.msg)
+                })
+        },
+
+        stopCrawl: function(){
+            data = {
+                'stop': 'stop'
+            }
+            axios.post(scanfUrl + "/website", data)
+                .then((response)=>{
+                    if(response.data.status == "ok"){
+                        this.loading = false
+                        this.getWebsites()
+                    }
                 })
         },
 
@@ -39,11 +53,20 @@ var websiteVue = new Vue({
                 }, (error) => {
                     alert("An error occured")
                 })
+            globalVue.$emit('eventWebsitesRefreshed')
+        },
+        
+        deleteWebsite: function(id){
+            axios.delete(scanfUrl + "/website/"+ id)
+                .then((response) => {
+                    this.getWebsites()
+                }, (error) => {
+                    alert("An error occured")
+                })
         },
 
         eventWebsiteClick: function(website_id){
             globalVue.$emit('eventWebsiteClick', website_id)
-            // pageVue.getPages(website_id);
         }
     }
 })
