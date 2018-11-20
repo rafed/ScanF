@@ -22,7 +22,9 @@ class WebsiteController(Resource):
         url = args['url']
         stop = args['stop']
 
-        if stop is not None and stop is True:
+        print(stop, crawler.running)
+
+        if stop == 'stop':
             crawler.running = False
             return {
                 "status":"ok",
@@ -37,7 +39,9 @@ class WebsiteController(Resource):
         
         try:
             crawler.crawl(url)
-        except:
+        except Exception as e:
+            crawler.running = False
+            print(e)
             return {
                 "status":"error",
                 "msg":"bad url"

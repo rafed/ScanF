@@ -7,6 +7,7 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 from model.website import Website
 from model.page import Page
+from model.form import Form
 
 class Crawler:
     def __init__(self):
@@ -57,18 +58,29 @@ class Crawler:
         if Page.query.filter(Page.url == url).first():
             return []
 
-        page = Page(self.website_id, url)
-        page.save_to_db()
-
         r = requests.get(url)
         soup = BeautifulSoup(r.text, "html.parser")
 
-        print(self._get_forms(soup))
+        try:
+            page = Page(self.website_id, url)
+            page.save_to_db()
+            self._get_forms(soup, page.id, url)
+        except Exception as e:
+            print("Row already exists", e)
+        
         return self._get_links(url, soup)
 
-    def _get_forms(self, soup):
+    def _get_forms(self, soup, id, url):
         forms = soup.findAll('form')
-        return forms
+        for form in forms:
+            form_action = urljoin(url, form.get('action'))
+            method = form.get('method')
+            f = Form(id, method, form_action)
+            f.save_to_db()
+            #############
+            #############
+            #############
+
 
     def _get_links(self, baseurl, soup):
         new_links = []

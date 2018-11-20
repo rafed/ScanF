@@ -23,9 +23,12 @@
 <body>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-2">
         <h2>ScanF</h2>
       </div>
+      <!-- <div class="col-md-10">
+          <h5 class="inline" font-size:"8px">Web application security scanner</h5>
+      </div> -->
     </div>
 
     <div class="row">
@@ -35,6 +38,7 @@
           <span v-if="websites.length>0">({{websites.length}})</span>
         </h3>
 
+        <!-- URL INPUTER -->
         <div class="input-group">
           <input v-model="inputUrl" type="text" placeholder="Crawl URL" class="form-control">
           <span class="input-group-btn">
@@ -44,6 +48,7 @@
         </div>
         <br>
 
+        <!-- WEBSITE PANEL -->
         <div id='sites'>
           <ul class="list-group">
             <li v-for="site in websites" class="list-group-item justify-content-between align-items-center">
@@ -53,6 +58,7 @@
           </ul>
         </div>
 
+        <!-- COOKIES -->
         <h3>Cookies</h3>
         <div id="cookies">
           <li v-for="site in websites">
@@ -62,6 +68,7 @@
 
       </div>
 
+      <!-- PAGE PANEL -->
       <div id="pagePanel" class="col-md-3">
         <h3>Pages
           <span v-if="pages.length>0">({{pages.length}})</span>
@@ -70,24 +77,29 @@
           <ul class="list-group">
             <li v-for="page in pages" class="list-group-item justify-content-between align-items-center">
               <span v-on:click="deletePage(page.id)" class="closeX label label-danger badge-pill">X</span>
-              <a v-on:click="eventPageClick(page.id)">{{page.url}}</a>
-              <ul>
-                <li>helllo</li>
-                <li>bye</li>
+              <a v-on:click="eventPageClick(page.id)">{{getOnlyPath(page.url)}}</a>
+
+              <br v-if="page.forms.length>0"></br>
+              <ul v-if="page.forms.length>0">
+                <li v-for="form in page.forms" v-on:click="eventFormClick(form.id)">Form:{{form.id}}</li>
               </ul>
             </li>
           </ul>
         </div>
       </div>
 
+      <!-- INJECTION PANEL -->
       <div id="injectionPanel" class="col-md-5">
         <h3>Injections</h3>
 
       </div>
 
+      <!-- TEST PANEL -->
       <div id="testPanel" class="col-md-2">
-        <h3>Test List</h3>
-
+        <h3>Test List
+          <span v-if="tests.length>0">({{tests.length}})</span>
+        </h3>
+        <li v-for="test in tests" v-on:click="eventTestClick(test.id)" class="list-group-item justify-content-between align-items-center">Test:{{test.id}}</li>
       </div>
     </div>
     <!-- End of row -->
@@ -99,6 +111,7 @@
 
 <script src="js/website.js"></script>
 <script src="js/page.js"></script>
+<script src="js/test.js"></script>
 
 <script>
   scanfUrl = 'http://localhost:5000/api'

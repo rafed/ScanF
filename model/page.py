@@ -6,7 +6,7 @@ from model.website import Website
 class Page(db.Model, BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     website_id = db.Column(db.Integer, db.ForeignKey(Website.id, ondelete='CASCADE'))
-    url = db.Column(db.String(2000)) 
+    url = db.Column(db.String(2000), unique=True) 
     screenshot_path = db.Column(db.String(50))
 
     # children = db.relationship('Form', backref='Page', passive_deletes=True)
