@@ -8,6 +8,10 @@ from multiprocessing.dummy import Pool as ThreadPool
 from model.website import Website
 from model.page import Page
 from model.form import Form
+from model.field import Field
+from model.constraint import Constraint
+
+from services.form_parser import FormParser
 
 class Crawler:
     def __init__(self):
@@ -70,13 +74,27 @@ class Crawler:
         
         return self._get_links(url, soup)
 
-    def _get_forms(self, soup, id, url):
+    def _get_forms(self, soup, id, baseurl):
         forms = soup.findAll('form')
         for form in forms:
-            form_action = urljoin(url, form.get('action'))
-            method = form.get('method')
-            f = Form(id, method, form_action)
-            f.save_to_db()
+            parsed_form = FormParser(baseurl, form)
+
+            if not parsed_form.get_fields(): continue
+
+            formdb = Form(id, parsed_form.get_method(), parsed_form.get_action())
+            formdb.save_to_db()
+
+            for field in parsed_form.get_fields():
+                fielddb = Field(formdb.id,  field['attributes']['type'],
+                                            field['attributes']['name'],
+                                            field['attributes']['value'])
+                fielddb.save_to_db()
+
+                for key, value in field['constraints'].items():
+                    if value is None: continue
+                    c = Constraint(fielddb.id, key, value)
+                    c.save_to_db()
+
             #############
             #############
             #############
