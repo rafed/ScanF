@@ -21,6 +21,12 @@
     background: #555; 
 }
 
+/* .navbar-nav{
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+} */
+
 /************ WEBSITE PANEL **************/
 
 li {
@@ -59,4 +65,10 @@ li {
 
 #page .list-group-item {
     display: list-item;
+}
+
+/********* Injection panel ***********/
+
+#injectionPanel .container-fluid {
+    padding: 0;
 }

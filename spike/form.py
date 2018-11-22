@@ -2,8 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
-website = "https://www.w3schools.com/html/tryit.asp?filename=tryhtml_input_attributes_readonly"
-skip = ["select", "submit", "reset", "button", "file"]
+# website = "https://www.w3schools.com/html/tryit.asp?filename=tryhtml_input_attributes_readonly"
+website = "https://www.w3schools.com/html/tryit.asp?filename=tryhtml_elem_select_multiple"
+skip = ["submit", "reset", "button", "file"]
 
 r = requests.get(website)
 soup = BeautifulSoup(r.text, "html.parser")
@@ -32,8 +33,8 @@ for field in fields:
     attr['name'] = field.get('name')
     attr['value'] = field.get('value')
 
-    if field.has_attr('readonly'):
-        constraint['readonly'] = True
+    # if field.has_attr('readonly'):
+    #     constraint['readonly'] = True
     constraint['size'] = field.get('size')
     constraint['maxlength'] = field.get('maxlength')
     constraint['multipart/form-data'] = field.get('multipart/form-data')

@@ -12,6 +12,10 @@
   <script src="js/jquery-3.3.1.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
 
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+
   <!-- Vue.js -->
   <script src="js/vue-dev.js"></script>
   <script src="js/axios.min.js"></script>
@@ -40,7 +44,7 @@
 
         <!-- URL INPUTER -->
         <div class="input-group">
-          <input v-model="inputUrl" type="text" placeholder="Crawl URL" class="form-control">
+          <input v-model="inputUrl" type="text" placeholder="Crawl URL" class="form-control input-sm">
           <span class="input-group-btn">
             <button v-if='loading' v-on:click="stopCrawl" type="submit" class="btn btn-default">x</button>
             <button v-else v-on:click="goCrawl" type="submit" class="btn btn-default">Go!</button>
@@ -53,7 +57,7 @@
           <ul class="list-group">
             <li v-for="site in websites" class="list-group-item justify-content-between align-items-center">
               <span v-on:click="deleteWebsite(site.id)" class="closeX label label-danger badge-pill">X</span>
-              <a v-on:click="eventWebsiteClick(site.id)">{{site.baseurl}}</a>
+              <a v-on:click="eventWebsiteClick(site.id)" href="javascript:void(0)">{{site.baseurl}}</a>
             </li>
           </ul>
         </div>
@@ -77,11 +81,13 @@
           <ul class="list-group">
             <li v-for="page in pages" class="list-group-item justify-content-between align-items-center">
               <span v-on:click="deletePage(page.id)" class="closeX label label-danger badge-pill">X</span>
-              <a v-on:click="eventPageClick(page.id)">{{getOnlyPath(page.url)}}</a>
+              <a v-on:click="eventPageClick(page.id)" href="javascript:void(0)">{{getOnlyPath(page.url)}}</a>
 
               <br v-if="page.forms.length>0"></br>
               <ul v-if="page.forms.length>0">
-                <li v-for="form in page.forms" v-on:click="eventFormClick(form.id)">Form:{{form.id}}</li>
+                <li v-for="form in page.forms" v-on:click="eventFormClick(form.id)">
+                  <a href="javascript:void(0)">Form:{{form.id}}</a>
+                </li>
               </ul>
             </li>
           </ul>
@@ -91,6 +97,32 @@
       <!-- INJECTION PANEL -->
       <div id="injectionPanel" class="col-md-5">
         <h3>Injections</h3>
+
+        <!-- NAVBAR -->
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <ul class="nav navbar-nav">
+              <li v-bind:class="{active: sqlview}" v-on:click="viewSql()">
+                <a href="javascript:void(0)">SQLi</a>
+              </li>
+              <li v-bind:class="{active: !sqlview}" v-on:click="viewXss()">
+                <a href="javascript:void(0)">XSS</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <div v-if="sqlview" id="sqlinput" class="col-md-6">
+          Inputer sql
+          <div v-for="field in fields">
+            <h5>{{field.name}} ({{field.type}})</h5>
+            <input v-model="field.value" type="text" class="form-control input-sm">
+          </div>
+        </div>
+        <div v-if="sqlview" id="sqloutput" class="col-md-6">Results sql</div>
+
+        <div v-if="!sqlview" id="xssinput" class="col-md-6">Inputer xss</div>
+        <div v-if="!sqlview" id="xssoutput" class="col-md-6">Results xss</div>
 
       </div>
 
@@ -112,6 +144,7 @@
 <script src="js/website.js"></script>
 <script src="js/page.js"></script>
 <script src="js/test.js"></script>
+<script src="js/attack.js"></script>
 
 <script>
   scanfUrl = 'http://localhost:5000/api'

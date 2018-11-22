@@ -36,8 +36,8 @@ var testVue = new Vue({
             testVue.getTests(form_id);
         })
 
-        globalVue.$on('eventPagesRefreshed', () => {
-            testVue.tests = []
-        })
+        // globalVue.$on('eventPagesRefreshed', () => {
+        //     testVue.tests = []
+        // })
     }
 })

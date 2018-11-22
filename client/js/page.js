@@ -4,7 +4,8 @@ var pageVue = new Vue({
 
     data: {
         currentPage: 0,
-        pages: []
+        pages: [],
+        screenshot_path:''
     },
 
     methods: {
@@ -45,8 +46,24 @@ var pageVue = new Vue({
         },
 
         eventPageClick: function (page_id) {
-            globalVue.$emit('eventPageClick', page_id)
-            console.log("Page clicked", page_id)
+            // globalVue.$emit('eventPageClick', page_id)
+            axios.get(scanfUrl + "/page_screenshot/" + page_id)
+                .then((response) => {
+                    if(response.exists==true){
+                        this.displayScreenshot(page_id)
+                    }
+                }, (error) => {
+                    alert("An error occured")
+                })
+        },
+
+        displayScreenshot: function(page_id){
+            axios.get(scanfUrl + "/page/" + page_id)
+                .then((response) => {
+                    this.screenshot_path = response.screenshot_path
+                }, (error) => {
+                    alert("An error occured")
+                })
         },
 
         eventFormClick: function (form_id) {

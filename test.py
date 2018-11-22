@@ -1,32 +1,24 @@
-from services.crawler import Crawler
+from services.form_parser import FormParser
+import requests
+from bs4 import BeautifulSoup
+import json
+from pprint import pprint
 
-from datetime import datetime
+url = "https://www.w3schools.com/html/tryit.asp?filename=tryhtml_input_date_max_min"
+r = requests.get(url)
+soup = BeautifulSoup(r.text, "html.parser")
 
-# c = Crawler()
-# c.crawl("http://localhost:8080/tgnet/")
+forms = soup.findAll('form')
+# print(forms)
 
-from model.website import Website
-# from model.page import Page
-# from model.form import Form
-# from model.field import Field
-# from model.constraint import Constraint
-# from model.test import Test
-# from model.cookie import Cookie
+for form in forms:
+    # print(form)
+    # print('\n\n\n')
+    f = FormParser(url, form)
 
-# Website('www.facebook.com', None).save_to_db()
-# Website('www.mala.com', None).save_to_db()
+    # print(f.get_action())
+    # print(f.get_method())
+    # j = json.loads(str(f.get_fields()))
+    # print(j.dumps(ident=2))
 
-# Page(1, 'www.facebook.com/rafed123', None).save_to_db()
-
-# Form(1, 'get', '/rafed123.php').save_to_db()
-
-# Field(1, 'input', 'name', 'Rafed').save_to_db()
-
-# Constraint(1, 'maxlength', 20).save_to_db()
-
-# Test(1, 'asdfsd', 'asdfad', 'asdfads', datetime.now(), 2.5, None).save_to_db()
-
-# Cookie(1, 'session', '42342p9dn29nq293n').save_to_db()
-
-w = Website.query.filter(Website.id==1).first()
-w.delete()
+    pprint(f.get_fields())
