@@ -3,14 +3,19 @@ var pageVue = new Vue({
     el: '#pagePanel',
 
     data: {
-        currentPage: 0,
+        currentWebsite: 0,
+        nowactive:'',
         pages: [],
-        screenshot_path:''
+        screenshot_path: '',
+
+        modalDisplay: 'none',
+        modalImgSrc: '',
+        modalCaption:''
     },
 
     methods: {
         getPages: function (id) {
-            this.currentPage = id
+            this.currentWebsite = id
             axios.get(scanfUrl + "/page/" + id)
                 .then((response) => {
                     this.pages = response.data
@@ -26,49 +31,43 @@ var pageVue = new Vue({
             return el.pathname + el.search
         },
 
-        // getForms: function (page_id) {
-        //     axios.get(scanfUrl + "/form/" + page_id)
-        //         .then((response) => {
-        //             console.log("in get forms", response.data)
-        //             return response.data
-        //         }, (error) => {
-        //             alert("An error occured")
-        //         })
-        // },
-
         deletePage: function (id) {
             axios.delete(scanfUrl + "/page/" + id)
                 .then((response) => {
-                    this.getPages(this.currentPage)
+                    this.getPages(this.currentWebsite)
                 }, (error) => {
                     alert("An error occured")
                 })
         },
 
         eventPageClick: function (page_id) {
-            // globalVue.$emit('eventPageClick', page_id)
+            document.body.style.cursor = 'wait';
+
             axios.get(scanfUrl + "/page_screenshot/" + page_id)
                 .then((response) => {
-                    if(response.exists==true){
-                        this.displayScreenshot(page_id)
-                    }
+                    document.body.style.cursor = 'default'
+                    this.displayScreenshot(response.data)
                 }, (error) => {
+                    document.body.style.cursor = 'default'
                     alert("An error occured")
                 })
         },
 
-        displayScreenshot: function(page_id){
-            axios.get(scanfUrl + "/page/" + page_id)
-                .then((response) => {
-                    this.screenshot_path = response.screenshot_path
-                }, (error) => {
-                    alert("An error occured")
-                })
+        displayScreenshot: function (page) {
+            this.modalDisplay = "block"
+            this.modalImgSrc = page.screenshot_path
+            this.modalCaption = page.url
+            console.log(page.screenshot_path)
         },
 
-        eventFormClick: function (form_id) {
-            globalVue.$emit('eventFormClick', form_id)
-            console.log("form clicked", form_id)
+        closeScreenshot: function(){
+            this.modalDisplay = "none"
+        },
+
+        eventFormClick: function (form) {
+            this.nowactive = form.page_id
+            globalVue.$emit('eventFormClick', form.id)
+            console.log("form clicked", form.id)
         }
     },
 
@@ -78,7 +77,7 @@ var pageVue = new Vue({
         })
 
         globalVue.$on('eventWebsitesRefreshed', () => {
-            pageVue.getPages(pageVue.currentPage);
+            pageVue.getPages(pageVue.currentWebsite);
         })
     }
 })

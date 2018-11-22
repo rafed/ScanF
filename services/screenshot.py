@@ -8,12 +8,12 @@ chrome_options = Options()
 chrome_options.add_argument("window-size=1366,768")
 chrome_options.add_argument("--headless")
 
-driver = webdriver.Chrome(executable_path='./chromedriver', chrome_options=chrome_options)
-
 class Screenshot:
     @staticmethod
     def snap(url):
+        driver = webdriver.Chrome(executable_path='./chromedriver', chrome_options=chrome_options)
         driver.get(url)
-        date = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
-        driver.save_screenshot('store/'+date+'.png')
-        # driver.quit()
+        img_path =  'store/'+datetime.now().strftime("%d-%m-%Y %H:%M:%S")+'.png'
+        driver.save_screenshot(img_path)
+        driver.quit()
+        return img_path
