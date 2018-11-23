@@ -2,6 +2,8 @@
     border: 1px solid green;
 } */
 
+/*********** SCROLLBAR STUFF *************/
+
 ::-webkit-scrollbar {
     width: 5px;
 }
@@ -89,16 +91,16 @@
     background-color: green;
 }
 
-/* #pages .active {
-    background-color: green;
-} */
-
 /************ WEBSITE PANEL **************/
 
 li {
     /* cursor:pointer; */
     font-size: 10pt;
     word-break: break-all;
+}
+
+li a:hover {
+    cursor:pointer;
 }
 
 .closeX{
@@ -138,3 +140,8 @@ li {
 #injectionPanel .container-fluid {
     padding: 0;
 }
+
+#sqlinput, #sqloutput, #xssinput, #xssoutput {
+    height: 70vh;
+    overflow-y: scroll;
+} 

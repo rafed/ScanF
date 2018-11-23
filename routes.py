@@ -9,6 +9,7 @@ from controller.form_contoller import FormController
 from controller.field_contoller import FieldController
 from controller.test_controller import TestController
 
+from controller.sqli_controller import SQLiController
 
 ############# Static files ###############
 
@@ -40,3 +41,5 @@ api.add_resource(FormController, '/form/<string:id>')
 api.add_resource(FieldController, '/field/<string:id>')
 
 api.add_resource(TestController, '/test', '/test/<string:form_id>')
+
+api.add_resource(SQLiController, '/sql')

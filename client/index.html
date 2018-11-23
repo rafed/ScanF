@@ -97,9 +97,9 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                
+
                 <button v-if="cookieAddFlag" v-on:click="addCookieRequest" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
-                
+
                 <button v-else v-on:click="updateCookieRequest" type="button" class="btn btn-primary" data-dismiss="modal">Update</button>
               </div>
             </div>
@@ -122,8 +122,8 @@
 
               <br v-if="page.forms.length>0"></br>
               <ul v-if="page.forms.length>0">
-                <li v-for="form in page.forms" v-on:click="eventFormClick(form)">
-                  <a href="javascript:void(0)">Form:{{form.id}}</a>
+                <li v-for="form in page.forms" v-on:click="eventFormClick(form)" class="text-warning">
+                  <a href="javascript:void(0)" class="text-warning">Form:{{form.id}}</a>
                 </li>
               </ul>
             </li>
@@ -145,37 +145,53 @@
         <nav class="navbar navbar-default">
           <div class="container-fluid">
             <ul class="nav navbar-nav">
-              <li v-bind:class="{active: sqlview}" v-on:click="viewSql()">
+              <li v-bind:class="{active: currentview=='sql'}" v-on:click="viewSql()">
                 <a href="javascript:void(0)">SQLi</a>
               </li>
-              <li v-bind:class="{active: !sqlview}" v-on:click="viewXss()">
+              <li v-bind:class="{active: currentview=='xss'}" v-on:click="viewXss()">
                 <a href="javascript:void(0)">XSS</a>
               </li>
             </ul>
           </div>
         </nav>
 
-        <!-- NAV TABS THIS LOOKS GOOD TOO! -->
-        <!-- <ul class="nav nav-tabs">
-          <li v-bind:class="{active: sqlview}" v-on:click="viewSql()">
-            <a href="javascript:void(0)">SQLi</a>
-          </li>
-          <li v-bind:class="{active: !sqlview}" v-on:click="viewXss()">
-            <a href="javascript:void(0)">XSS</a>
-          </li>
-        </ul> -->
+        <!-- ---------------------- SQLi --------------------- -->
+        <div v-if="currentview=='sql'" id="sqlinput" class="col-md-6">
+          <h4>SQL Attack</h4>
+          <!-- AUTO ATTACK -->
+          <h5 class="text-info">Automated attack</h5>
+          <div class="input-group">
+            <select v-model="sqliSelected" class="form-control">
+              <option disabled value="">Select string</option>
+              <option v-for="sqli in sqlis">{{sqli.queryStr}}</option>
+            </select>
+            <span class="input-group-btn">
+              <button v-on:click="autoSQLiAttack" type="submit" class="btn btn-default">Go!</button>
+            </span>
+          </div>
 
-        <div v-if="sqlview" id="sqlinput" class="col-md-6">
-          Inputer sql
+
+          <!-- MANUAL ATTACK -->
+          <h5 class="text-info">Custom attack</h5>
           <div v-for="field in fields">
             <h5>{{field.name}} ({{field.type}})</h5>
             <input v-model="field.value" type="text" class="form-control input-sm">
           </div>
+          <br>
+          <button type="submit" class="btn-default">Send request</button>
         </div>
-        <div v-if="sqlview" id="sqloutput" class="col-md-6">Results sql</div>
 
-        <div v-if="!sqlview" id="xssinput" class="col-md-6">Inputer xss</div>
-        <div v-if="!sqlview" id="xssoutput" class="col-md-6">Results xss</div>
+        <div v-if="currentview=='sql'" id="sqloutput" class="col-md-6">
+          <h4>SQLi Result</h4>
+        </div>
+
+        <!-- ---------------------- XSS -------------------- -->
+        <div v-if="currentview=='xss'" id="xssinput" class="col-md-6">
+          <h4>XSS Attack</h4>
+        </div>
+        <div v-if="currentview=='xss'" id="xssoutput" class="col-md-6">
+          <h4>XSS Result</h4>
+        </div>
 
       </div>
 
