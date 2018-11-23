@@ -87,7 +87,7 @@
 /************** ON LIST ACTIVE *************/
 
 
-#sites .active, #pages .active {
+#sites .active, #pages .active, #testPanel .active {
     background-color: green;
 }
 

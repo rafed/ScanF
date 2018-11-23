@@ -3,7 +3,18 @@ var testVue = new Vue({
     el: '#testPanel',
 
     data: {
-        tests: []
+        // t:{
+        //     id:1,
+        //     form_id:1,
+        //     type:'sqli',
+        //     html_output_path:'file_12093.html',
+        //     screenshot_path:'img_12309.png',
+        //     time:'13:45',
+        //     duration: '3s',
+        //     result: 'vulnerable'
+        // },
+        tests: [],
+        nowactive:''
     },
 
     methods: {
@@ -20,14 +31,21 @@ var testVue = new Vue({
         deleteTest: function (id) {
             axios.delete(scanfUrl + "/test/" + id)
                 .then((response) => {
-                    // emit event to injector panel
+                    if(this.nowactive==null){
+                        this.tests = []
+                    }
+                    else {
+                        this.getTests(nowactive.form_id)
+                    }
+                    // emit event to injector panel////////////
                 }, (error) => {
                     alert("An error occured")
                 })
         },
 
-        eventTestClick: function(id){
-            console.log("Test clicked", id)
+        eventTestClick: function(test){
+            this.nowactive = test
+            globalVue.$emit('eventTestClick', test)
         }
     },
 

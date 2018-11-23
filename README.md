@@ -1,13 +1,14 @@
 
-[![Build Status](https://travis-ci.org/rafed123/showme.svg?branch=master)](https://travis-ci.org/rafed123/showme)
+[![Build Status](https://travis-ci.org/rafed123/ScanF.svg?branch=master)](https://travis-ci.org/rafed123/ScanF)
 ![Python](https://img.shields.io/badge/python-3.6+-blue.svg)
 ![Vue.js](https://img.shields.io/badge/vue.js-2.0-blue.svg)
 
 ## ShowMe - ICSE 2018 SCORE
 
 ## ScanF
-Web application security assessment by fault injection and behavior monitoring
+ScanF is a tool that searches for vulnerabilities in web applications by fault injection and behavior monitoring. This project is a part of an academic course (SPL3).
 
+![Screenshot](/demo.png)
 
 ### Contributor
 - [Rafed Muhammad Yasir](https://github.com/rafed123)

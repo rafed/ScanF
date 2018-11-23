@@ -170,7 +170,6 @@
             </span>
           </div>
 
-
           <!-- MANUAL ATTACK -->
           <h5 class="text-info">Custom attack</h5>
           <div v-for="field in fields">
@@ -181,8 +180,14 @@
           <button type="submit" class="btn-default">Send request</button>
         </div>
 
+        <!-- SQL RESULT -->
         <div v-if="currentview=='sql'" id="sqloutput" class="col-md-6">
           <h4>SQLi Result</h4>
+          <div v-for="(value, key) in testResult">
+            <!-- <h5 class="text-info">{{key}}</h5>
+            <p>{{value}}</p> -->
+            <p><span class="text-warning">{{key}}:</span>&nbsp;{{value}}</p>
+          </div>
         </div>
 
         <!-- ---------------------- XSS -------------------- -->
@@ -200,7 +205,12 @@
         <h3>Test List
           <span v-if="tests.length>0">({{tests.length}})</span>
         </h3>
-        <li v-for="test in tests" v-on:click="eventTestClick(test.id)" class="list-group-item justify-content-between align-items-center">Test:{{test.id}}</li>
+        <ul class="list-group">
+          <li v-for="test in tests" v-bind:class="{active: nowactive.id==test.id}" class="list-group-item justify-content-between align-items-center">
+            <span v-on:click="" class="closeX label label-danger badge-pill">&times;</span>
+            <a v-on:click="eventTestClick(test)" href="javascript:void(0)">Test:{{test.id}}</a>
+          </li>
+        </ul>
       </div>
     </div>
     <!-- End of row -->

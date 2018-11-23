@@ -7,7 +7,8 @@ var attackVue = new Vue({
         fields: [],
 
         sqliSelected: '',
-        sqlis: []
+        sqlis: [],
+        testResult: null
     },
 
     methods: {
@@ -47,6 +48,11 @@ var attackVue = new Vue({
         globalVue.$on('eventFormClick', function (form_id) {
             if(attackVue.currentview=='') attackVue.currentview='sql'
             attackVue.getFormFields(form_id);
+        }),
+
+        globalVue.$on('eventTestClick', function (test) {
+            console.log("THAPOR", test)
+            attackVue.testResult = test
         })
     }
 })
