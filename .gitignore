@@ -1,4 +1,5 @@
 *.png
+!demo.png
 __pycache__/
 *.pyc
 env/
