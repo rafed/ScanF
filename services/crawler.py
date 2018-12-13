@@ -94,7 +94,7 @@ class Crawler:
                     if value is None: continue
                     c = Constraint(fielddb.id, key, value)
                     c.save_to_db()
-
+                
             #############
             #############
             #############

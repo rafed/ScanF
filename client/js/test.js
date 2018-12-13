@@ -51,7 +51,11 @@ var testVue = new Vue({
 
     mounted() {
         globalVue.$on('eventFormClick', function (form_id) {
-            testVue.getTests(form_id);
+            testVue.getTests(form_id)
+        })
+
+        globalVue.$on('loadTests', function(form_id){
+            testVue.getTests(form_id)
         })
 
         // globalVue.$on('eventPagesRefreshed', () => {

@@ -157,11 +157,11 @@
 
         <!-- ---------------------- SQLi --------------------- -->
         <div v-if="currentview=='sql'" id="sqlinput" class="col-md-6">
-          <h4>SQL Attack</h4>
+          <h4>SQLi Attack</h4>
           <!-- AUTO ATTACK -->
           <h5 class="text-info">Automated attack</h5>
           <div class="input-group">
-            <select v-model="sqliSelected" class="form-control">
+            <select v-model="sqlPayload" class="form-control">
               <option disabled value="">Select string</option>
               <option v-for="sqli in sqlis">{{sqli.queryStr}}</option>
             </select>
@@ -183,9 +183,9 @@
         <!-- SQL RESULT -->
         <div v-if="currentview=='sql'" id="sqloutput" class="col-md-6">
           <h4>SQLi Result</h4>
-          <div v-for="(value, key) in testResult">
-            <!-- <h5 class="text-info">{{key}}</h5>
-            <p>{{value}}</p> -->
+          <div v-for="(value, key) in sqliTestResult">
+            <h5 class="text-info">{{key}}</h5>
+            <p>{{value}}</p>
             <p><span class="text-warning">{{key}}:</span>&nbsp;{{value}}</p>
           </div>
         </div>
@@ -193,6 +193,17 @@
         <!-- ---------------------- XSS -------------------- -->
         <div v-if="currentview=='xss'" id="xssinput" class="col-md-6">
           <h4>XSS Attack</h4>
+          <!-- AUTO ATTACK -->
+          <h5 class="text-info">Automated attack</h5>
+          <div class="input-group">
+            <select v-model="xssPayload" class="form-control">
+              <option disabled value="">Select string</option>
+              <option v-for="xss in xsss">{{xss.payload}}</option>
+            </select>
+            <span class="input-group-btn">
+              <button v-on:click="autoSQLiAttack" type="submit" class="btn btn-default">Go!</button>
+            </span>
+          </div>
         </div>
         <div v-if="currentview=='xss'" id="xssoutput" class="col-md-6">
           <h4>XSS Result</h4>
