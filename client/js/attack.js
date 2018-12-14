@@ -24,10 +24,12 @@ var attackVue = new Vue({
     methods: {
         viewSql: function () {
             this.currentview = 'sql'
+            globalVue.$emit('viewchanged', 'sql')
         },
 
         viewXss: function () {
             this.currentview = 'xss'
+            globalVue.$emit('viewchanged', 'xss')
         },
 
         getFormFields: function (form_id) {
@@ -37,6 +39,20 @@ var attackVue = new Vue({
                     console.log(this.fields)
                 }, (error) => {
                     alert("An error occured")
+                })
+        },
+
+        autoXSSAttack: function(){
+            data = {
+                'form_id': this.form_id,
+                'payload': this.xssPayload
+            }
+
+            document.body.style.cursor = 'wait'
+            axios.post(scanfUrl + "/autoxssattack", data)
+                .then((response) => {
+                    globalVue.$emit('loadTests', this.form_id)
+                    document.body.style.cursor = 'default'
                 })
         },
 
@@ -54,9 +70,30 @@ var attackVue = new Vue({
                 })
         },
 
+        manualSQLiAttack: function () {
+            new_data = {}
+
+            for(var i=0; i<this.fields.length; i++){
+                new_data[this.fields[i].name] = this.fields[i].default_value
+            }
+
+            data = {
+                'form_id': this.form_id,
+                'data': JSON.stringify(new_data)
+            }
+            
+            document.body.style.cursor = 'wait'
+            axios.post(scanfUrl + "/manualsqlattack", data)
+                .then((response) => {
+                    globalVue.$emit('loadTests', this.form_id)
+                    document.body.style.cursor = 'default'
+                })
+        },
+
         displayScreenshot: function (path) {
             this.modalDisplay = "block"
             this.modalImgSrc = path
+            console.log("bal amar")
         },
 
         closeScreenshot: function(){
@@ -87,25 +124,33 @@ var attackVue = new Vue({
     mounted() {
         globalVue.$on('eventFormClick', function (form_id) {
             if (attackVue.currentview == '') attackVue.currentview = 'sql'
+            globalVue.$emit('viewchanged', 'sql')
+
             attackVue.getFormFields(form_id);
             attackVue.form_id = form_id
 
             attackVue.sqliTestResult = null
-            console.log('shalala')
         }),
 
         globalVue.$on('eventTestClick', function (test) {
-            attackVue.sqliTestResult = test
+            console.log(test.type)
+            if(test.type == 'sql'){
+                attackVue.sqliTestResult = test
 
-            jsonObject = JSON.parse(test.input_json)
-            for (var key in jsonObject) {
-                for (var i=0; i<attackVue.fields.length; i++) {
-                    field = attackVue.fields[i]
-                    if (field.name == key) {
-                        attackVue.fields[i].default_value = jsonObject[key]
+                jsonObject = JSON.parse(test.input_json)
+                for (var key in jsonObject) {
+                    for (var i=0; i<attackVue.fields.length; i++) {
+                        field = attackVue.fields[i]
+                        if (field.name == key) {
+                            attackVue.fields[i].default_value = jsonObject[key]
+                        }
                     }
                 }
             }
+            else if (test.type == 'xss'){
+                attackVue.xssTestResult = test
+            }
+            
         })
     }
 })

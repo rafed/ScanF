@@ -9,8 +9,8 @@ from controller.form_contoller import FormController
 from controller.field_contoller import FieldController
 from controller.test_controller import TestController
 
-from controller.sqli_controller import SQLiController, AutoSQLAttack
-from controller.xss_controller import XssController
+from controller.sqli_controller import SQLiController, AutoSQLAttack, ManualSQLAttack
+from controller.xss_controller import XssController, AutoXSSAttack
 
 ############# Static files ###############
 
@@ -44,6 +44,8 @@ api.add_resource(FieldController, '/field/<string:id>')
 api.add_resource(TestController, '/test', '/test/<string:form_id>')
 
 api.add_resource(SQLiController, '/sql')
-api.add_resource(XssController, '/xss')
-
 api.add_resource(AutoSQLAttack, '/autosqlattack')
+api.add_resource(ManualSQLAttack, '/manualsqlattack')
+
+api.add_resource(XssController, '/xss')
+api.add_resource(AutoXSSAttack, '/autoxssattack')

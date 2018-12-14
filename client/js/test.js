@@ -15,7 +15,8 @@ var testVue = new Vue({
         // },
         tests: [],
         nowactive:'',
-        currentForm: ''
+        currentForm: '',
+        tab:''
     },
 
     methods: {
@@ -47,14 +48,16 @@ var testVue = new Vue({
     mounted() {
         globalVue.$on('eventFormClick', function (form_id) {
             testVue.getTests(form_id)
+            if(testVue.tab == null) testVue.tab = 'sql'
         })
 
         globalVue.$on('loadTests', function(form_id){
             testVue.getTests(form_id)
+            if(testVue.tab == null) testVue.tab = 'sql'
         })
 
-        // globalVue.$on('eventPagesRefreshed', () => {
-        //     testVue.tests = []
-        // })
+        globalVue.$on('viewchanged', (type) => {
+            testVue.tab = type
+        })
     }
 })

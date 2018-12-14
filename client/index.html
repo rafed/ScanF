@@ -178,7 +178,7 @@
             <input v-model="field.default_value" type="text" class="form-control input-sm">
           </div>
           <br>
-          <button type="submit" class="btn-default">Send request</button>
+          <button v-on:click="manualSQLiAttack" type="submit" class="btn-default">Send request</button>
         </div>
 
         <!-- SQL RESULT -->
@@ -196,7 +196,7 @@
             <p>
               <span class="text-warning">Screenshot:</span>&nbsp;
               <a v-on:click="displayScreenshot(sqliTestResult.screenshot_path)" href="javascript:void(0)">
-              {{sqliTestResult.screenshot_path}}</a>
+                {{sqliTestResult.screenshot_path}}</a>
 
             </p>
             <p>
@@ -209,10 +209,11 @@
               <span v-else>{{sqliTestResult.result}}</span>
             </p>
           </template>
-          <!-- The Modal -->
-          <div v-bind:style="{'display':modalDisplay}" v-on:click="closeScreenshot" class="modal">
-            <img v-bind:src="modalImgSrc" class="modal-content">
-          </div>
+        </div>
+
+        <!-- The Modal -->
+        <div v-bind:style="{'display':modalDisplay}" v-on:click="closeScreenshot" class="modal">
+          <img v-bind:src="modalImgSrc" class="modal-content">
         </div>
 
         <!-- ---------------------- XSS -------------------- -->
@@ -226,12 +227,37 @@
               <option v-for="xss in xsss">{{xss.payload}}</option>
             </select>
             <span class="input-group-btn">
-              <button v-on:click="autoSQLiAttack" type="submit" class="btn btn-default">Go!</button>
+              <button v-on:click="autoXSSAttack" type="submit" class="btn btn-default">Go!</button>
             </span>
           </div>
         </div>
         <div v-if="currentview=='xss'" id="xssoutput" class="col-md-6">
           <h4>XSS Result</h4>
+          <template v-if="xssTestResult != null">
+            <p>
+              <span class="text-warning">Time:</span>&nbsp;
+              {{xssTestResult.time}}
+            </p>
+            <p>
+              <span class="text-warning">HTML:</span>&nbsp;
+              <a :href="xssTestResult.html_output_path" target='_blank'>{{xssTestResult.html_output_path}}</a>
+            </p>
+            <p>
+              <span class="text-warning">Screenshot:</span>&nbsp;
+              <a v-on:click="displayScreenshot(xssTestResult.screenshot_path)" href="javascript:void(0)">
+                {{xssTestResult.screenshot_path}}</a>
+
+            </p>
+            <p>
+              <span class="text-warning">Duration:</span>&nbsp;
+              {{formatDuration(xssTestResult.duration)}}
+            </p>
+            <p>
+              <span class="text-warning">Result:</span>&nbsp;
+              <span v-if="xssTestResult.result=='vulnerable'" class="text-danger">{{xssTestResult.result}}</span>
+              <span v-else>{{xssTestResult.result}}</span>
+            </p>
+          </template>
         </div>
 
       </div>
@@ -239,10 +265,10 @@
       <!-- TEST PANEL -->
       <div id="testPanel" class="col-md-2">
         <h3>Test List
-          <span v-if="tests.length>0">({{tests.length}})</span>
+          <!-- <span v-if="tests.length>0">({{tests.length}})</span> -->
         </h3>
         <ul class="list-group">
-          <li v-for="test in tests" v-bind:class="{active: nowactive.id==test.id}" class="list-group-item justify-content-between align-items-center">
+          <li v-for="test in tests" v-if="test.type==tab" v-bind:class="{active: nowactive.id==test.id}" class="list-group-item justify-content-between align-items-center">
             <span v-on:click="deleteTest(test.id)" class="closeX label label-danger badge-pill">&times;</span>
             <a v-on:click="eventTestClick(test)" href="javascript:void(0)">Test:{{test.id}}</a>
           </li>
