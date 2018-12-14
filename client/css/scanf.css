@@ -40,7 +40,7 @@
 /****************** SCREENSHOT STUFF ****************/
 
 /* The Modal (background) */
-#pagePanel .modal {
+#pagePanel .modal, #injectionPanel .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 50; /* Sit on top */
@@ -55,7 +55,7 @@
 }
 
 /* Modal Content (Image) */
-#pagePanel .modal-content {
+#pagePanel .modal-content, #injectionPanel .modal-content {
     margin: auto;
     display: block;
     width: 80%;
@@ -74,7 +74,7 @@
 }
 
 /* Add Animation - Zoom in the Modal */
-#pagePanel .modal-content, #caption { 
+#pagePanel .modal-content, #caption, #injectionPanel .modal-content { 
     animation-name: zoom;
     animation-duration: 0.3s;
 }

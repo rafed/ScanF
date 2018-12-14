@@ -6,7 +6,7 @@ var attackVue = new Vue({
         currentview: '',
         fields: [],
 
-        form_id:0,
+        form_id: 0,
 
         sqlPayload: '',
         sqlis: [],
@@ -14,7 +14,11 @@ var attackVue = new Vue({
 
         xssPayload: '',
         xsss: [],
-        xssTestResult: null
+        xssTestResult: null,
+
+        // Screenshot stuff
+        modalDisplay: 'none',
+        modalImgSrc: '',
     },
 
     methods: {
@@ -36,15 +40,31 @@ var attackVue = new Vue({
                 })
         },
 
-        autoSQLiAttack: function(){
+        autoSQLiAttack: function () {
             data = {
                 'form_id': this.form_id,
                 'payload': this.sqlPayload
             }
+            
+            document.body.style.cursor = 'wait'
             axios.post(scanfUrl + "/autosqlattack", data)
-                .then((response)=>{
+                .then((response) => {
                     globalVue.$emit('loadTests', this.form_id)
+                    document.body.style.cursor = 'default'
                 })
+        },
+
+        displayScreenshot: function (path) {
+            this.modalDisplay = "block"
+            this.modalImgSrc = path
+        },
+
+        closeScreenshot: function(){
+            this.modalDisplay = "none"
+        },
+
+        formatDuration: function(duration){
+            return Number(duration).toFixed(3) + 's'
         }
     },
 
@@ -66,15 +86,26 @@ var attackVue = new Vue({
 
     mounted() {
         globalVue.$on('eventFormClick', function (form_id) {
-            if(attackVue.currentview=='') attackVue.currentview='sql'
+            if (attackVue.currentview == '') attackVue.currentview = 'sql'
             attackVue.getFormFields(form_id);
             attackVue.form_id = form_id
-            console.log(attackVue.form_id)
+
+            attackVue.sqliTestResult = null
+            console.log('shalala')
         }),
 
         globalVue.$on('eventTestClick', function (test) {
-            attackVue.testResult = test
-            // assign test values to fields *******************
+            attackVue.sqliTestResult = test
+
+            jsonObject = JSON.parse(test.input_json)
+            for (var key in jsonObject) {
+                for (var i=0; i<attackVue.fields.length; i++) {
+                    field = attackVue.fields[i]
+                    if (field.name == key) {
+                        attackVue.fields[i].default_value = jsonObject[key]
+                    }
+                }
+            }
         })
     }
 })

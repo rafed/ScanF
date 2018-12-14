@@ -14,12 +14,13 @@ var testVue = new Vue({
         //     result: 'vulnerable'
         // },
         tests: [],
-        nowactive:''
+        nowactive:'',
+        currentForm: ''
     },
 
     methods: {
         getTests: function (id) {
-            this.currentPage = id
+            this.currentForm = id
             axios.get(scanfUrl + "/test/" + id)
                 .then((response) => {
                     this.tests = response.data
@@ -28,25 +29,19 @@ var testVue = new Vue({
                 })
         },
 
+        eventTestClick: function(test){
+            this.nowactive = test
+            globalVue.$emit('eventTestClick', test)
+        },
+
         deleteTest: function (id) {
             axios.delete(scanfUrl + "/test/" + id)
                 .then((response) => {
-                    if(this.nowactive==null){
-                        this.tests = []
-                    }
-                    else {
-                        this.getTests(nowactive.form_id)
-                    }
-                    // emit event to injector panel////////////
+                    this.getTests(this.currentForm)
                 }, (error) => {
                     alert("An error occured")
                 })
         },
-
-        eventTestClick: function(test){
-            this.nowactive = test
-            globalVue.$emit('eventTestClick', test)
-        }
     },
 
     mounted() {

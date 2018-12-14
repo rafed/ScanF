@@ -27,7 +27,7 @@ class TestController(Resource):
     def post(self):
         pass
 
-    def delete(self, id):
-        test = Test.query.get(id)
+    def delete(self, form_id):
+        test = Test.query.get(form_id)
         test.delete()
         return {"status":"ok"}

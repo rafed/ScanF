@@ -98,7 +98,8 @@
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 
-                <button v-if="cookieAddFlag" v-on:click="addCookieRequest" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                <button v-if="cookieAddFlag" v-on:click="addCookieRequest" type="button" class="btn btn-primary"
+                  data-dismiss="modal">Save</button>
 
                 <button v-else v-on:click="updateCookieRequest" type="button" class="btn btn-primary" data-dismiss="modal">Update</button>
               </div>
@@ -174,7 +175,7 @@
           <h5 class="text-info">Custom attack</h5>
           <div v-for="field in fields">
             <h5>{{field.name}} ({{field.type}})</h5>
-            <input v-model="field.value" type="text" class="form-control input-sm">
+            <input v-model="field.default_value" type="text" class="form-control input-sm">
           </div>
           <br>
           <button type="submit" class="btn-default">Send request</button>
@@ -183,10 +184,34 @@
         <!-- SQL RESULT -->
         <div v-if="currentview=='sql'" id="sqloutput" class="col-md-6">
           <h4>SQLi Result</h4>
-          <div v-for="(value, key) in sqliTestResult">
-            <h5 class="text-info">{{key}}</h5>
-            <p>{{value}}</p>
-            <p><span class="text-warning">{{key}}:</span>&nbsp;{{value}}</p>
+          <template v-if="sqliTestResult != null">
+            <p>
+              <span class="text-warning">Time:</span>&nbsp;
+              {{sqliTestResult.time}}
+            </p>
+            <p>
+              <span class="text-warning">HTML:</span>&nbsp;
+              <a :href="sqliTestResult.html_output_path" target='_blank'>{{sqliTestResult.html_output_path}}</a>
+            </p>
+            <p>
+              <span class="text-warning">Screenshot:</span>&nbsp;
+              <a v-on:click="displayScreenshot(sqliTestResult.screenshot_path)" href="javascript:void(0)">
+              {{sqliTestResult.screenshot_path}}</a>
+
+            </p>
+            <p>
+              <span class="text-warning">Duration:</span>&nbsp;
+              {{formatDuration(sqliTestResult.duration)}}
+            </p>
+            <p>
+              <span class="text-warning">Result:</span>&nbsp;
+              <span v-if="sqliTestResult.result=='vulnerable'" class="text-danger">{{sqliTestResult.result}}</span>
+              <span v-else>{{sqliTestResult.result}}</span>
+            </p>
+          </template>
+          <!-- The Modal -->
+          <div v-bind:style="{'display':modalDisplay}" v-on:click="closeScreenshot" class="modal">
+            <img v-bind:src="modalImgSrc" class="modal-content">
           </div>
         </div>
 
@@ -218,7 +243,7 @@
         </h3>
         <ul class="list-group">
           <li v-for="test in tests" v-bind:class="{active: nowactive.id==test.id}" class="list-group-item justify-content-between align-items-center">
-            <span v-on:click="" class="closeX label label-danger badge-pill">&times;</span>
+            <span v-on:click="deleteTest(test.id)" class="closeX label label-danger badge-pill">&times;</span>
             <a v-on:click="eventTestClick(test)" href="javascript:void(0)">Test:{{test.id}}</a>
           </li>
         </ul>

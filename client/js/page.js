@@ -57,7 +57,6 @@ var pageVue = new Vue({
             this.modalDisplay = "block"
             this.modalImgSrc = page.screenshot_path
             this.modalCaption = page.url
-            console.log(page.screenshot_path)
         },
 
         closeScreenshot: function(){
