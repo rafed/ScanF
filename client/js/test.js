@@ -25,6 +25,7 @@ var testVue = new Vue({
             axios.get(scanfUrl + "/test/" + id)
                 .then((response) => {
                     this.tests = response.data
+                    console.log(response.data)
                 }, (error) => {
                     alert("An error occured")
                 })

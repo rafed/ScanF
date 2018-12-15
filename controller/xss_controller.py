@@ -89,7 +89,7 @@ class AutoXSSAttack(Resource):
             temp_fields[k] = payload
 
             print("Form is of type", form.method)
-            if form.method == 'get':
+            if form.method.lower() == 'get':
                 url_parts = list(urlparse.urlparse(form.form_action))
                 query = dict(urlparse.parse_qsl(url_parts[4]))
                 query.update(temp_fields)
@@ -101,7 +101,7 @@ class AutoXSSAttack(Resource):
                 driver.get(url)
                 duration = time.time() - start_time
                 
-            elif form.method == 'post':
+            elif form.method.lower() == 'post':
                 script_post = 'post("{}", data={});'.format(form.form_action, json.dumps(temp_fields))
                 attack_script = script + script_post
 

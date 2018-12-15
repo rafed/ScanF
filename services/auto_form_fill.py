@@ -55,7 +55,7 @@ class AutoFormFill:
                         fuzz_name = d
 
                 if fuzz_val < 20:
-                    new_form[field['name']] = randomString(maxlength)
+                    new_form[field['name']] = randomString(int(maxlength))
                 else:
                     lines = open('data/forms/' + fuzz_name).read().splitlines()
                     line = random.choice(lines)
@@ -65,7 +65,7 @@ class AutoFormFill:
                 new_form[field['name']] = field['default_value']
 
             else:
-                new_form[field['name']] = randomString(maxlength)
+                new_form[field['name']] = randomString(int(maxlength))
 
         return new_form
 
@@ -74,4 +74,5 @@ def randomNumber(min, max):
     return random.randint(min, max)
 
 def randomString(length):
+    print(length)
     return ''.join(random.choice(string.ascii_letters) for x in range(length))

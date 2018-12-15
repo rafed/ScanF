@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from multiprocessing.dummy import Pool as ThreadPool 
 
 from model.website import Website
+from model.cookie import Cookie
 from model.page import Page
 from model.form import Form
 from model.field import Field
@@ -29,13 +30,21 @@ class Crawler:
         self.scanned_urls = []
         self.not_scanned_urls = [self.url]
         self.running = True
+        self.cookies = []
 
         website = Website.query.filter(Website.baseurl == self.home_url.netloc).first()
 
         if not website:
             website = Website(self.home_url.netloc, None)
             website.save_to_db()
+        else:
+            cookies = Cookie.query.filter(Cookie.website_id == website.id).all()
+            cookie_dict = {}
+            for cookie in cookies:
+                cookie_dict[cookie.name] =  cookie.value
 
+            self.cookies = cookie_dict
+            
         self.website_id = website.id
 
     def crawl(self, url):
@@ -62,7 +71,7 @@ class Crawler:
         if Page.query.filter(Page.url == url).first():
             return []
 
-        r = requests.get(url)
+        r = requests.get(url, cookies=self.cookies)
         soup = BeautifulSoup(r.text, "html.parser")
 
         try:
